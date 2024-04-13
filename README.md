@@ -8,13 +8,16 @@ Features:
 - Enemy ESP
   - Shows HP
   - Shows Distance
+- Chest ESP
+  - With distance
+- All Interactable ESP (DEV)
+  - I don't intend to fully support this but it's available, a bit glitchy but it works. 
 - Customizeable Font Size, Colors, and Text Offsets
 - Almost Entirely using LUA + REFramework, should be good to go as long as REFramework is up-to-date
   - Some Minor Dependencies on LUA and other Scripting Tools.
 - Hotkeys for KB/M and Controller ("1" on PC, R-Trigger+Left on DPas for Controller)
 
 Known Issues:
-- Pawns will show up as ???? (May fix later)
 - No Max Draw Distance (Future Update)
 - No Offscreen checks (sorry but kinda not needed either ya know)
 - Dead Mobs/Friendlys stay
@@ -23,3 +26,5 @@ Known Issues:
 
 TON OF CREDITS TO THE ORIGINAL AUTHOR OF "NAME ON HEAD" He inspired this and I was able to use and learn from a lot of his code, so without him none of this would even be possible, please make sure you check out his github!!
 -- XYZAPI DEV - https://github.com/xyzkljl1/MyDD2Mod
+
+Also tons of credit to alphaZomega (REFramework Modding Discord) for his list of monsters id -> names! 
