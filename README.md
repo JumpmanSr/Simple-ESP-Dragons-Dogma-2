@@ -4,14 +4,14 @@ A Simple ESP for Dragon's Dogma 2
 ![alt text](https://github.com/JumpmanSr/Simple-ESP-Dragons-Dogma-2/blob/main/Simple%20ESP.png)
 
 Features:
-Friendly ESP
-Enemy ESP
+- Friendly ESP
+- Enemy ESP
   - Shows HP
   - Shows Distance
-Customizeable Font Size, Colors, and Text Offsets
-Almost Entirely using LUA + REFramework, should be good to go as long as REFramework is up-to-date
+- Customizeable Font Size, Colors, and Text Offsets
+- Almost Entirely using LUA + REFramework, should be good to go as long as REFramework is up-to-date
   - Some Minor Dependencies on LUA and other Scripting Tools.
-Hotkeys for KB/M and Controller ("1" on PC, R-Trigger+Left on DPas for Controller)
+- Hotkeys for KB/M and Controller ("1" on PC, R-Trigger+Left on DPas for Controller)
 
 Known Issues:
 - Pawns will show up as ???? (May fix later)
