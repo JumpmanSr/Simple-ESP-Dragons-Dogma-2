@@ -2,6 +2,8 @@
 A Simple ESP for Dragon's Dogma 2
 
 ![alt text](https://github.com/JumpmanSr/Simple-ESP-Dragons-Dogma-2/blob/main/Simple%20ESP.png)
+![alt_text](![image](https://github.com/JumpmanSr/Simple-ESP-Dragons-Dogma-2/assets/41526355/491aff83-e1b5-4c22-8160-038e02c301c3)
+
 
 Features:
 - Friendly ESP
