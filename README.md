@@ -8,6 +8,7 @@ A Simple ESP for Dragon's Dogma 2
 
 
 Features:
+- Added Toggles for Each ESP in Settings!
 - Friendly ESP
 - Enemy ESP
   - Shows HP
