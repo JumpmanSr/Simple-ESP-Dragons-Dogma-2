@@ -1,10 +1,10 @@
 local modname="Simple ESP"
 local configfile=modname..".json"
-print("["..modname.."]".."Start")
+print("["..modname.."]".." Started.")
 
 
 --Made by JumpmanSr
---Inital Version
+--Version 2.0.0
 --https://github.com/JumpmanSr/Simple-ESP-Dragons-Dogma-2
 
 
@@ -15,16 +15,29 @@ print("["..modname.."]".."Start")
 
 --settings
 local _config={
+	{name="Simple ESP Options",type="mutualbox"},
+    {name="FriendShow",type="bool",default=true,label="Show Friendly ESP"},
+    --{name="",type="sameline"},
+    {name="EnemyShow",type="bool",default=true,label="Show Enemy ESP"},
+ 
+    {name="ChestShow",type="bool",default=true,label="Show Chest ESP"},
+	
+    {name="ShowAllInteractables",type="bool",default=false,label="Show EVERY player interactable"},
+	
     {name="font",type="font",default="simsun.ttc"},
     {name="fontsize",type="fontsize",default=20},
     {name="fcolor",type="rgba32",default=0xff00EE00},
 	{name="ecolor",type="rgba32",default=0xff0000EE},
+	{name="tcolor",type="rgba32",default=0xffFFE800},
+	{name="acolor",type="rgba32",default=0xffFFFFFF},
     {name="offsetX",type="int",default=0,min=-300,max=5000},
     {name="offsetY",type="int",default=0,min=-300,max=5000},
     {name="offsetZ",type="int",default=0,min=-300,max=5000},
     {name="keyboardKey",type="hotkey",default="Alpha1",actionName="keyboardKey2728"},
     {name="controllerKeyShoulder",type="hotkey",default="RT (R2)",actionName="controllerKeyShoulder2728"},
     {name="controllerKeyNotShoulder",type="hotkey",default="LLeft",actionName="controllerKeyNotShoulder2728"},
+	
+	
 }
 local myapi = require("_XYZApi/_XYZApi")
 local hk = require("Hotkeys/Hotkeys")
@@ -1292,15 +1305,20 @@ re.on_frame(function()
     end
     if on then
 		---Entity Holders---
-        local player_listh=sdk.get_managed_singleton("app.CharacterListHolder")
-        local npcm=sdk.get_managed_singleton("app.NPCManager")
-		local enemyman=sdk.get_managed_singleton("app.EnemyManager")
+        local player_listh = sdk.get_managed_singleton("app.CharacterListHolder")
+        local npcm = sdk.get_managed_singleton("app.NPCManager")
+		local enemyman = sdk.get_managed_singleton("app.EnemyManager")
+		local gimmickman = sdk.get_managed_singleton("app.GimmickManager")
 		
 		--Setup--
-        local chars=player_listh:getAllCharacters()
-        local ct=chars:get_Count()
-		local enemies=enemyman:getAllEnemies()
-		local et=enemies:get_Count()
+        local chars = player_listh:getAllCharacters()
+        local ct = chars:get_Count()
+		local enemies = enemyman:getAllEnemies()
+		local et = enemies:get_Count()
+		local allinteractables = gimmickman:get_ManagedGimmicks()
+		local ait = allinteractables:get_Count()
+		local treasureboxes = gimmickman:get_TreasureBoxGimmicks()
+		local tc = treasureboxes:get_Count()
 		
 		--Future?--
 		
@@ -1309,65 +1327,128 @@ re.on_frame(function()
         imgui.push_font(font)
 		
 		----- ENEMY ESP REGION -----
-        for i=0,et-1 do
-            local enem=enemies:get_Item(i)
-			--Log(tostring(enem))
-            --Log(tostring(enem:get_DistanceSqFromPlayer()))
-            local d=enem:get_Chara()
-			--local e=enem:get_Monster() -- Maybe Used Later or Related to Wild Life 
-			--Log(tostring(d))
-            if enem ~=nil and d~= nil then
-                local joint=enem:get_Transform()--get_GameObject():get_Transform()--:getJointByName("Head_0")
-                local pos=joint:get_Position() --Not using Head as some enemys don't have one and it's slow as this is PER FRAME
-				local flatpos=draw.world_to_screen(pos)
-				local dist=d:get_DistanceSqFromPlayer()
-				if flatpos ~= nil then --and dist ~= nil then
-					local width = 100 * (dist  / 100);
-					if width > 125 then
-						width = 125
-					end
-					local height = 100 * (dist / 100);
-					if height > 125 then
-						height = 125
-                    end
-					draw.outline_rect(flatpos.x - (width/2), flatpos.y - height, width, height, config.ecolor)
-					local text = enemname[d:get_CharaIDString()].name .. "\nHP: " .. d:get_Hp() .. "/" .. d:get_OriginalMaxHp() .. "\nDistance:" .. dist
-					if text == nil or text == "nil" then
-						text = "Enemy - Unknown"
-					end
-					draw.text(text, flatpos.x - (width/2), flatpos.y - height - 60, config.ecolor)
-					--Hard coded height - 60 will need to be adjusted, could do fontsize * 3 (line count maybe)
-				end		
+		if config.EnemyShow == true then
+			for i=0,et-1 do
+				local enem=enemies:get_Item(i)
+				--Log(tostring(enem))
+				--Log(tostring(enem:get_DistanceSqFromPlayer()))
+				local d=enem:get_Chara()
+				--local e=enem:get_Monster() -- Maybe Used Later or Related to Wild Life 
+				--Log(tostring(d))
+				if enem ~=nil and d~= nil then
+					local joint=enem:get_Transform()--get_GameObject():get_Transform()--:getJointByName("Head_0")
+					local pos=joint:get_Position() --Not using Head as some enemys don't have one and it's slow as this is PER FRAME
+					local flatpos=draw.world_to_screen(pos)
+					local dist=d:get_DistanceSqFromPlayer()
+					if flatpos ~= nil then --and dist ~= nil then
+						local width = 100 * (dist  / 100);
+						if width > 125 then
+							width = 125
+						end
+						local height = 100 * (dist / 100);
+						if height > 125 then
+							height = 125
+						end
+						draw.outline_rect(flatpos.x - (width/2), flatpos.y - height, width, height, config.ecolor)
+						local text = enemname[d:get_CharaIDString()].name .. "\nHP: " .. d:get_Hp() .. "/" .. d:get_OriginalMaxHp() .. "\nDistance:" .. dist
+						if text == nil or text == "nil" then
+							text = "Enemy - Unknown"
+						end
+						draw.text(text, flatpos.x - (width/2), flatpos.y - height - 60, config.ecolor)
+						--Hard coded height - 60 will need to be adjusted, could do fontsize * 3 (line count maybe)
+					end		
+				end
 			end
 		end
 		
-		---FRIENDLY ESP REGION -----
-        for i=0,ct-1 do
-			
-            local char=chars:get_Item(i)
-            --Log(tostring(char:get_DistanceSqFromPlayer()))
-            local d=npcm:getNPCData(char:get_CharaID())
-            if d ~=nil then
-                local joint=char:get_Transform()--get_GameObject():get_Transform()--:getJointByName("Head_0")
-                local pos=joint:get_Position() -- You can use the above it you want, I found the Joint took longer as it's per frame
+		----- FRIENDLY ESP REGION -----
+		if config.FriendShow == true then
+			for i=0,ct-1 do
 				
-				local flatpos=draw.world_to_screen(pos)
-				local dist=char:get_DistanceSqFromPlayer()
-				if flatpos ~= nil and dist ~= nil then
-					local width = 100 * (dist  / 100);
-					if width > 125 then
-						width = 125
+				local char=chars:get_Item(i)
+				--Log(tostring(char:get_DistanceSqFromPlayer()))
+				local d=npcm:getNPCData(char:get_CharaID())
+				if d ~=nil then
+					local joint=char:get_Transform()--get_GameObject():get_Transform()--:getJointByName("Head_0")
+					local pos=joint:get_Position() -- You can use the above it you want, I found the Joint took longer as it's per frame
+					
+					local flatpos=draw.world_to_screen(pos)
+					local dist=char:get_DistanceSqFromPlayer()
+					if flatpos ~= nil and dist ~= nil then
+						local width = 100 * (dist  / 100);
+						if width > 125 then
+							width = 125
+						end
+						local height = 100 * (dist / 100);
+						if height > 125 then
+							height = 125
+						end
+						draw.outline_rect(flatpos.x - (width/2), flatpos.y - height, width, height, config.fcolor)
+						local text=d:get_Name()
+						if text == "???" then
+							text = "Pawn"
+						end
+						draw.text(text, flatpos.x - (width/2), flatpos.y - height - 20, config.fcolor)
 					end
-					local height = 100 * (dist / 100);
-					if height > 125 then
-						height = 125
-                    end
-					draw.outline_rect(flatpos.x - (width/2), flatpos.y - height, width, height, config.fcolor)
-					local text=d:get_Name()
-					draw.text(text, flatpos.x - (width/2), flatpos.y - height - 20, config.fcolor)
 				end
-            end
-        end
+			end
+		end
+		
+		----- CHEST ESP REGION -----
+		if config.ChestShow == true then
+			for i=0,tc-1 do
+				
+				local chestItem = treasureboxes:get_Item(i) -- app.gm80_001 / GimmickBase (For All Items)
+				--Log(tostring(chestItem))
+				if chestItem ~=nil then
+					--local chestItem = chestItem:get_Transform()
+					local pos = chestItem:get_Trans():get_Position() -- Renamed transform for some reason but sure
+					local flatpos = draw.world_to_screen(pos)
+					local dist = chestItem:get_DistanceXZSqFromPlayer()
+					if flatpos ~= nil and dist ~= nil then
+						local width = 100 * (dist  / 100);
+						if width > 125 then
+							width = 125
+						end
+						local height = 100 * (dist / 100);
+						if height > 125 then
+							height = 125
+						end
+						draw.outline_rect(flatpos.x - (width/2), flatpos.y - height, width, height, config.tcolor)
+						local text = "Chest\nDistance: " .. dist 
+						draw.text(text, flatpos.x - (width/2), flatpos.y - height - 40, config.tcolor)
+					end
+				end
+			end
+		end
+		
+		----- ALL INTERACTABLE ESP REGION -----
+		if config.ShowAllInteractables == true then
+			for i=0,ait-1 do
+				
+				local anyItem = allinteractables:get_Item(i) -- app.gm80_001 / GimmickBase (For All Items)
+				--Log(tostring(anyItem))
+				if anyItem ~=nil then
+					--local anyItem = anyItem:get_Transform()
+					local pos = anyItem:get_Trans():get_Position() -- Renamed transform for some reason but sure
+					local flatpos = draw.world_to_screen(pos)
+					local dist = anyItem:get_DistanceXZSqFromPlayer()
+					if flatpos ~= nil and dist ~= nil then
+						local width = 100 * (dist  / 100);
+						if width > 125 then
+							width = 125
+						end
+						local height = 100 * (dist / 100);
+						if height > 125 then
+							height = 125
+						end
+						draw.outline_rect(flatpos.x - (width/2), flatpos.y - height, width, height, config.acolor)
+						local text = "Interactable\nDistance: " .. dist 
+						draw.text(text, flatpos.x - (width/2), flatpos.y - height - 40, config.acolor)
+					end
+				end
+			end
+		end
 		
         imgui.pop_font()
 		
