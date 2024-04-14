@@ -4,7 +4,7 @@ print("["..modname.."]".." Started.")
 
 
 --Made by JumpmanSr
---Version 2.0.0
+--Version 3.0.0
 --https://github.com/JumpmanSr/Simple-ESP-Dragons-Dogma-2
 
 
@@ -19,11 +19,9 @@ local _config={
     {name="FriendShow",type="bool",default=true,label="Show Friendly ESP"},
     --{name="",type="sameline"},
     {name="EnemyShow",type="bool",default=true,label="Show Enemy ESP"},
- 
     {name="ChestShow",type="bool",default=true,label="Show Chest ESP"},
-	
     {name="ShowAllInteractables",type="bool",default=false,label="Show EVERY player interactable"},
-	
+	{name="MaxDistance",type="float",default=20000,min=-1,max=1000000},
     {name="font",type="font",default="simsun.ttc"},
     {name="fontsize",type="fontsize",default=20},
     {name="fcolor",type="rgba32",default=0xff00EE00},
@@ -1274,7 +1272,7 @@ local enemname = {
   }
 }
 
---thanks to lingsamuel
+--thanks to lingsamuel (original from XYZAPI)
 local CJK_GLYPH_RANGES = {
     0x0020, 0x00FF, -- Basic Latin + Latin Supplement
     0x0400, 0x04FF, -- Cyrillic
@@ -1285,9 +1283,7 @@ local CJK_GLYPH_RANGES = {
     0x4e00, 0x9FAF, -- CJK Ideograms
     0,
 }
---必须有CJK_GLYPH_RANGES才能支持中文字符
---字号过大就会崩溃，不同字体支持字号不一样，中文字体支持的字号比较小？
---simsun:约30，times:至少250 MS明朝：60
+
 local font = imgui.load_font( config.font, config.fontsize,CJK_GLYPH_RANGES)
 
 local on=false
@@ -1340,6 +1336,9 @@ re.on_frame(function()
 					local pos=joint:get_Position() --Not using Head as some enemys don't have one and it's slow as this is PER FRAME
 					local flatpos=draw.world_to_screen(pos)
 					local dist=d:get_DistanceSqFromPlayer()
+					if dist > config.MaxDistance and config.MaxDistance ~= -1 then
+						goto enemygoto
+					end
 					if flatpos ~= nil then --and dist ~= nil then
 						local width = 100 * (dist  / 100);
 						if width > 125 then
@@ -1358,6 +1357,7 @@ re.on_frame(function()
 						--Hard coded height - 60 will need to be adjusted, could do fontsize * 3 (line count maybe)
 					end		
 				end
+				::enemygoto::
 			end
 		end
 		
@@ -1374,6 +1374,9 @@ re.on_frame(function()
 					
 					local flatpos=draw.world_to_screen(pos)
 					local dist=char:get_DistanceSqFromPlayer()
+					if dist > config.MaxDistance and config.MaxDistance ~= -1 then
+						goto friendlygoto
+					end
 					if flatpos ~= nil and dist ~= nil then
 						local width = 100 * (dist  / 100);
 						if width > 125 then
@@ -1391,6 +1394,7 @@ re.on_frame(function()
 						draw.text(text, flatpos.x - (width/2), flatpos.y - height - 20, config.fcolor)
 					end
 				end
+				::friendlygoto::
 			end
 		end
 		
@@ -1405,6 +1409,9 @@ re.on_frame(function()
 					local pos = chestItem:get_Trans():get_Position() -- Renamed transform for some reason but sure
 					local flatpos = draw.world_to_screen(pos)
 					local dist = chestItem:get_DistanceXZSqFromPlayer()
+					if dist > config.MaxDistance and config.MaxDistance ~= -1 then
+						goto chestgoto
+					end					
 					if flatpos ~= nil and dist ~= nil then
 						local width = 100 * (dist  / 100);
 						if width > 125 then
@@ -1419,6 +1426,7 @@ re.on_frame(function()
 						draw.text(text, flatpos.x - (width/2), flatpos.y - height - 40, config.tcolor)
 					end
 				end
+				::chestgoto::
 			end
 		end
 		
@@ -1433,6 +1441,9 @@ re.on_frame(function()
 					local pos = anyItem:get_Trans():get_Position() -- Renamed transform for some reason but sure
 					local flatpos = draw.world_to_screen(pos)
 					local dist = anyItem:get_DistanceXZSqFromPlayer()
+					if dist > config.MaxDistance and config.MaxDistance ~= -1 then
+						goto allgoto
+					end
 					if flatpos ~= nil and dist ~= nil then
 						local width = 100 * (dist  / 100);
 						if width > 125 then
@@ -1447,6 +1458,7 @@ re.on_frame(function()
 						draw.text(text, flatpos.x - (width/2), flatpos.y - height - 40, config.acolor)
 					end
 				end
+				::allgoto::
 			end
 		end
 		
