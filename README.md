@@ -9,6 +9,7 @@ A Simple ESP for Dragon's Dogma 2
 
 Features:
 - Added Toggles for Each ESP in Settings!
+- Added Max Distance setting (same value for all ESPs)
 - Friendly ESP
 - Enemy ESP
   - Shows HP
@@ -23,7 +24,6 @@ Features:
 - Hotkeys for KB/M and Controller ("1" on PC, R-Trigger+Left on DPas for Controller)
 
 Known Issues:
-- No Max Draw Distance (Future Update)
 - No Offscreen checks (sorry but kinda not needed either ya know)
 - Dead Mobs/Friendlys stay
 - Code could be a lot better --sorry first time lua :) 
