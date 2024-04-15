@@ -22,7 +22,7 @@ local _config={
     {name="ChestShow",type="bool",default=true,label="Show Chest ESP"},
     {name="ShowAllInteractables",type="bool",default=false,label="Show EVERY player interactable"},
 	{name="MaxDistance",type="float",default=20000,min=-1,max=1000000},
-    {name="font",type="font",default="simsun.ttc"},
+    {name="font",type="font",default="times.ttf"},
     {name="fontsize",type="fontsize",default=20},
     {name="fcolor",type="rgba32",default=0xff00EE00},
 	{name="ecolor",type="rgba32",default=0xff0000EE},
