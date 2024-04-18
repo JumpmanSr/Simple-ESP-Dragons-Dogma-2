@@ -4,6 +4,8 @@ A Simple ESP for Dragon's Dogma 2
 ![alt text](https://github.com/JumpmanSr/Simple-ESP-Dragons-Dogma-2/blob/main/Simple%20ESP.png)
 (![image](https://github.com/JumpmanSr/Simple-ESP-Dragons-Dogma-2/assets/41526355/491aff83-e1b5-4c22-8160-038e02c301c3)
 ![image](https://github.com/JumpmanSr/Simple-ESP-Dragons-Dogma-2/assets/41526355/230501fb-d28a-449e-9d7f-72bc67e10916)
+![SimpleTokens](https://github.com/JumpmanSr/Simple-ESP-Dragons-Dogma-2/assets/41526355/456696ed-b267-474c-94a8-4b9a4898a57f)
+
 
 
 
