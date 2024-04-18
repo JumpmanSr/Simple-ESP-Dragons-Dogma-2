@@ -4,7 +4,7 @@ print("["..modname.."]".." Started.")
 
 
 --Made by JumpmanSr
---Version 3.0.0
+--Version 3.5.0
 --https://github.com/JumpmanSr/Simple-ESP-Dragons-Dogma-2
 
 
@@ -20,7 +20,9 @@ local _config={
     --{name="",type="sameline"},
     {name="EnemyShow",type="bool",default=true,label="Show Enemy ESP"},
     {name="ChestShow",type="bool",default=true,label="Show Chest ESP"},
-    {name="ShowAllInteractables",type="bool",default=false,label="Show EVERY player interactable"},
+    {name="ShowAllInteractables",type="bool",default=false,label="Show All player interactable"},
+	{name="",type="sameline"},
+	{name="ShowSeekerTokens",type="bool",default=true,label="Show Seeker Tokens Only"},
 	{name="MaxDistance",type="float",default=20000,min=-1,max=1000000},
     {name="font",type="font",default="times.ttf"},
     {name="fontsize",type="fontsize",default=20},
@@ -1311,12 +1313,18 @@ re.on_frame(function()
         local ct = chars:get_Count()
 		local enemies = enemyman:getAllEnemies()
 		local et = enemies:get_Count()
-		local allinteractables = gimmickman:get_ManagedGimmicks()
+		local allinteractables = gimmickman:get_ManagedGimmicks()--get_RimStoneGimmicks()--get_CollectionGimmicks()--get_RimStoneGimmicks()--get_ManagedGimmicks()
 		local ait = allinteractables:get_Count()
 		local treasureboxes = gimmickman:get_TreasureBoxGimmicks()
 		local tc = treasureboxes:get_Count()
 		
+		
+		
 		--Future?--
+		--get_RimStoneGimmicks() -- Rift Stones 
+		--get_CollectionGimmicks() -- Collectables  (ground)
+		--get_DirectItemGimmicks() -- town pickups
+		
 		
 		--local testmonstermanager=sdk.get_managed_singleton("app.MonsterManager")
         --Log(tostring(ct))
@@ -1435,12 +1443,19 @@ re.on_frame(function()
 			for i=0,ait-1 do
 				
 				local anyItem = allinteractables:get_Item(i) -- app.gm80_001 / GimmickBase (For All Items)
-				--Log(tostring(anyItem))
 				if anyItem ~=nil then
+				local isToken = false
+					if anyItem:get_GameObject():get_Name() == "gm82_036" then
+						isToken = true
+					end
+					if (isToken == false and config.ShowSeekerTokens == true) then
+						goto allgoto
+					end
 					--local anyItem = anyItem:get_Transform()
 					local pos = anyItem:get_Trans():get_Position() -- Renamed transform for some reason but sure
 					local flatpos = draw.world_to_screen(pos)
 					local dist = anyItem:get_DistanceXZSqFromPlayer()
+					--Log(anyItem:getInteractChara())
 					if dist > config.MaxDistance and config.MaxDistance ~= -1 then
 						goto allgoto
 					end
@@ -1455,6 +1470,9 @@ re.on_frame(function()
 						end
 						draw.outline_rect(flatpos.x - (width/2), flatpos.y - height, width, height, config.acolor)
 						local text = "Interactable\nDistance: " .. dist 
+						if (isToken == true) then
+							text = "Seeker Token"
+						end
 						draw.text(text, flatpos.x - (width/2), flatpos.y - height - 40, config.acolor)
 					end
 				end
