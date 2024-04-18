@@ -17,6 +17,7 @@ Features:
 - Chest ESP
   - With distance
 - All Interactable ESP (DEV)
+  - Ability to find Seeker's Tokens only (distance not supported atm)
   - I don't intend to fully support this but it's available, a bit glitchy but it works. 
 - Customizeable Font Size, Colors, and Text Offsets
 - Almost Entirely using LUA + REFramework, should be good to go as long as REFramework is up-to-date
@@ -25,7 +26,6 @@ Features:
 
 Known Issues:
 - No Offscreen checks (sorry but kinda not needed either ya know)
-- Dead Mobs/Friendlys stay
 - Code could be a lot better --sorry first time lua :) 
 
 
